@@ -78,7 +78,7 @@ def main():
 
     def on_start_motion_callback(group: str, no: int):
         log.Info("start motion: [%s_%d]" % (group, no))
-        audioPath = os.path.join(resources.CURRENT_DIRECTORY, "audio2.wav")
+        audioPath = os.path.join(resources.CURRENT_DIRECTORY, "audio1.wav")
         pygame.mixer.music.load(audioPath)
         pygame.mixer.music.play()
         log.Info("start lipSync")
@@ -213,6 +213,12 @@ def main():
         live2d.clearBuffer(0.0, 1.0, 0.0, 0.0)
         model.Draw()
 
+        pygame.display.flip() # When using an pygame.OPENGL display mode this will perform a gl buffer swap.
+        # pygame.time.wait(10)
+        clock.tick(fps)
+
+        # save rendered gl frame to video file
+        # run after the first `pygame.display.flip()`, to prevent the black frame at the beginning.
         width = screen_width
         height = screen_height
         glReadBuffer(GL_FRONT)  # Read from the front buffer (or GL_BACK for double-buffered)
@@ -225,9 +231,6 @@ def main():
         # Write the frame to the video file
         out.write(frame)
 
-        pygame.display.flip()
-        # pygame.time.wait(10)
-        clock.tick(fps)
 
     live2d.dispose()
     # Release the video writer and quit

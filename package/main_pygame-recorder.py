@@ -75,12 +75,14 @@ def main():
     lipSyncN = 2.5
 
     audioPlayed = False
+    MUSIC_END = pygame.USEREVENT+1 # 32867
 
     def on_start_motion_callback(group: str, no: int):
         log.Info("start motion: [%s_%d]" % (group, no))
         audioPath = os.path.join(resources.CURRENT_DIRECTORY, "audio1.wav")
         pygame.mixer.music.load(audioPath)
         pygame.mixer.music.play()
+        pygame.mixer.music.set_endevent(MUSIC_END)
         log.Info("start lipSync")
         wavHandler.Start(audioPath)
 
@@ -126,6 +128,10 @@ def main():
 
     while True:
         for event in pygame.event.get():
+            if event.type == MUSIC_END:
+                print('music end event')
+                running = False
+                break
             if event.type == pygame.QUIT:
                 running = False
                 break
